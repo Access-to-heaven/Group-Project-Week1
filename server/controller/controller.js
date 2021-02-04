@@ -9,7 +9,7 @@ class Controller {
 
     }
     static getJadwal(req,res,next){
-        let location = req.params.location
+        let location = req.decoded.city
         let time = new Date()
         let year = time.getFullYear()
         let month = ""
@@ -47,7 +47,7 @@ class Controller {
 
     }
     static getWeather(req, res, next){
-        let location = req.params.location
+        let location = req.decoded.city
         axios.get(`http://api.weatherbit.io/v2.0/current?city=${location}&key=${WEATHERKEY}`)
         .then(weather => {
             res.status(200).json(weather.data)
