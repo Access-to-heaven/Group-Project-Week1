@@ -2,6 +2,7 @@ const axios = require("axios")
 const { User } = require("../models/")
 const { hash, comparePassword } = require("../helpers/bcrypt")
 const { generateToken } = require("../helpers/jwt")
+const { OAuth2Client } = require("google-auth-library")
 
 class Controller {
   static postLogin(req,res,next){
@@ -51,6 +52,18 @@ class Controller {
     }
     let today = `${year}-${month}-${date}`
     axios.get(`https://api.pray.zone/v2/times/day.json?city=${location}&date=${today}`)
+    .then(jadwal => {
+      res.status(200).json(jadwal.data)
+    })
+    .catch(err => {
+      next(err)
+    })
+    
+  }
+
+  static getJadwalMonthly(req,res,next){
+    let location = req.decoded.city || "Jakarta"
+    axios.get(`https://api.pray.zone/v2/times/this_month.json?city=${location}`)
     .then(jadwal => {
       res.status(200).json(jadwal.data)
     })
