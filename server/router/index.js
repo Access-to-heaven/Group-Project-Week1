@@ -14,7 +14,7 @@ router.get("/jadwal-sholat",Controller.getJadwal)
 router.get("/jadwal-sholat-monthly",Controller.getJadwalMonthly)
 router.get("/weather", Controller.getWeather)
 router.get("/alquran",Controller.getAlquran)
-router.get("/kisah-nabi",Controller.getKisah)
+router.post("/kisah-nabi",Controller.getKisah)
 router.get("/setting/:id", authorization, Controller.getMyUser)
 router.put("/setting/:id", authorization, Controller.putSetting)
 
