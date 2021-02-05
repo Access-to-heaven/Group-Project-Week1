@@ -1,6 +1,6 @@
 const axios = require("axios")
 const { User } = require("../models/")
-const { comparePassword } = require("../helpers/bcrypt")
+const { hash, comparePassword } = require("../helpers/bcrypt")
 const { generateToken } = require("../helpers/jwt")
 
 class Controller {
@@ -10,11 +10,11 @@ class Controller {
       where: { email }
     })
     .then((user) => {
-      if (!user) throw { name: "SequelizeValidationError", status: 400, msg: "Invalid email or password" }
+      if (!user) throw { name: "error_400", status: 400, msg: "Invalid email or password" }
       
       const resultCompare = comparePassword(password, user.password)
       
-      if (!resultCompare) throw { name: "SequelizeUniqueConstraintError", status: 400, msg: "Invalid email or password" }
+      if (!resultCompare) throw { name: "error_400", status: 400, msg: "Invalid email or password" }
       console.log('<<<<<<< LOGIN');
       
       const access_token = generateToken({
@@ -88,7 +88,7 @@ class Controller {
   }
 
   static getMyUser(req, res, next) {
-    User.findByPk(+req.params.id)
+    User.findByPk(+req.decoded.id)
     .then((data) => {
       res.status(200).json(data)  
     })
@@ -105,7 +105,7 @@ class Controller {
     .then(data => {
       const comparedPass = comparePassword(currentPassword, data.password)
       if(!comparedPass){
-        throw { name: 'PasswordDidNotMatch', message : 'Password did not match!' }
+        throw { name: "error_400", status: 400, msg : 'Password did not match!' }
       }
       return User.update({
         name,
@@ -120,7 +120,7 @@ class Controller {
       })
     })
     .then(data => {
-      res.status(200).json({data})
+      res.status(200).json({data: data[1][0]})
     })
     .catch(err => {
       console.log(err)
@@ -157,7 +157,47 @@ class Controller {
   }
 
   static postGoogle(req,res,next){
-    
+    const client = new OAuth2Client(process.env.CLIENT_ID)
+    let email;
+    let isExist = false
+
+    client.verifyIdToken({
+      idToken: req.body.googleToken,
+      audience: process.env.CLIENT_ID
+    })
+      .then(ticket => {
+        const payload = ticket.getPayload();
+        email = payload.email;
+        console.log(payload);
+        return User.findOne({ where: { email } })
+      })
+      .then(user => {
+        if (user) {
+          isExist = true;
+          return user;
+        } else {
+          return User.create({
+            email,
+            password: process.env.DEFAULT_PASSWORD_GOOGLE
+          })
+        }
+      })
+      .then(user => {
+        const access_token = generateToken({
+          id: user.id,
+          email: user.email,
+          city: user.city
+        })
+        
+        if (isExist) {
+          res.status(200).json({ access_token })
+        } else {
+          res.status(201).json({ access_token })
+        }
+      })
+      .catch(err => {
+        next(err)
+      })
   }
 }
 

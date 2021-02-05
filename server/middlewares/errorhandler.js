@@ -1,24 +1,23 @@
 function errorHandler (err,req,res,next) {
-  console.log(err);
-  // const errors = err.errors.map(el => el.message)
-  const error = err.msg
-  const status = err.status
-  switch (err.name) {
-    case "SequelizeValidationError":
-      res.status(400).json({ error })
-      break;
-      case "SequelizeUniqueConstraintError":
-      res.status(400).json({ error })
-      break;
-    case "error_404":
-      res.status(status).json({ error })
-      break;
-    case "error_401":
-      res.status(status).json({ error })
-      break;
+  switch(err.name) {
+    case 'SequelizeUniqueConstraintError':
+      res.status(400).json({ error: err.errors.map(err => err.message) })
+      break
+    case 'SequelizeValidationError':
+      res.status(400).json({ error: err.errors.map(err => err.message) })
+      break
+    case 'error_404':
+      res.status(404).json({ error: err.msg })
+      break
+    case 'error_401':
+      res.status(401).json({ error: err.msg })
+      break
+    case 'error_400':
+      res.status(400).json({ error: err.msg })
+      break
     default:
-      res.status(500).json("Internal Server Error")
-      break;
+      res.status(500).json({ error: 'Internal Server Error' })
+      break
   }
 }
 

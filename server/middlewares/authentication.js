@@ -7,7 +7,7 @@ const authentication = function (req, res, next) {
     const decoded = verify(token)
     
     req.decoded = decoded
-    console.log(req.decode);
+    console.log(req.decoded);
     next()
   } catch (err) {
     next({ name: "error_401", status : 401, msg: 'Invalid Token'})
