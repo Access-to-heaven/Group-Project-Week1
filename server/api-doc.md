@@ -414,7 +414,7 @@ Dev-dependencies :
 ### Kisah nabi-nabi (story of the prophets)
 
 - **URL** : `/kisah-nabi`
-- **Method** : `GET`
+- **Method** : `POST`
 - **Data Params** :
 
   _Request Header_
@@ -555,3 +555,81 @@ Dev-dependencies :
   ```
 
 ---
+
+### Jadwal Sholat Bulanan (Monthly Prayer Schedule)
+
+- **URL** : `/jadwal-sholat-monthly`
+- **Method** : `GET`
+- **Data Params** :
+
+  _Request Header_
+  ```
+  "token": <access-token from logged in>
+  ```
+
+  _Request Body_
+
+- **Success Response**
+
+  _Response(200 - OK)_
+  ```
+  {
+    "code": 200,
+    "status": "OK",
+    "results": {
+    "datetime": [
+    {
+      "times": {
+      "Imsak": "05:32",
+      "Sunrise": "06:55",
+      "Fajr": "05:42",
+      "Dhuhr": "12:34",
+      "Asr": "15:47",
+      "Sunset": "18:14",
+      "Maghrib": "18:25",
+      "Isha": "-",
+      "Midnight": "23:58"
+      },
+      "date": {
+      "timestamp": 1612137600,
+      "gregorian": "2021-02-01",
+      "hijri": "1442-06-19"
+      }
+      },
+      {
+      "times": {
+      "Imsak": "05:32",
+      "Sunrise": "06:55",
+      "Fajr": "05:42",
+      "Dhuhr": "12:34",
+      "Asr": "15:47",
+      "Sunset": "18:14",
+      "Maghrib": "18:26",
+      "Isha": "-",
+      "Midnight": "23:58"
+      },
+      "date": {
+      "timestamp": 1612224000,
+      "gregorian": "2021-02-02",
+      "hijri": "1442-06-20"
+      }, .....
+  }
+  ```
+
+- **Error Response**
+
+  _Response(401 - Unauthorized)_
+  ```
+  {
+    "error": "Invalid Token"
+  }
+  ```
+  _Response(500 - Internal Server Error)_
+
+  ```
+  {
+    "errors": "Internal Server Error"
+  }
+  ```
+---
+
