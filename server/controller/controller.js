@@ -144,9 +144,10 @@ class Controller {
 
   static getKisah(req,res,next){
     const nabi = req.body.nabi || 'adam'
+    let input = nabi.toLowerCase();
     axios({
       method: 'GET',
-      url: `https://kisahnabi-api-zhirrr.vercel.app/api/searchnabi?q=${nabi}`
+      url: `https://kisahnabi-api-zhirrr.vercel.app/api/searchnabi?q=${input}`
     })
     .then((response) => {
       res.status(200).json(response.data)
