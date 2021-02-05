@@ -252,9 +252,9 @@ Dev-dependencies :
     "errors": "Internal Server Error"
   }
   ```
-  ---
+---
 
-  ### Jadwal Sholat (prayer schedule)
+### Jadwal Sholat (prayer schedule)
 
 - **URL** : `/jadwal-sholat`
 - **Method** : `GET`
@@ -331,7 +331,7 @@ Dev-dependencies :
   }
   ```
 ---
-  ### Weather
+### Weather
 
 - **URL** : `/weather`
 - **Method** : `GET`
@@ -410,8 +410,8 @@ Dev-dependencies :
     "errors": "Internal Server Error"
   }
   ```
-  ---
-  ### Kisah nabi-nabi (story of the prophets)
+---
+### Kisah nabi-nabi (story of the prophets)
 
 - **URL** : `/kisah-nabi`
 - **Method** : `GET`
