@@ -9,7 +9,7 @@ const authentication = function (req, res, next) {
 
     next()
   } catch (err) {
-    next({status : 401, msg: 'Invalid Token'})
+    next({name: "error_401", status : 401, msg: 'Invalid Token'})
   }
 }
 
