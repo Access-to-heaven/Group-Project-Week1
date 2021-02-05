@@ -10,11 +10,12 @@ class Controller {
       where: { email }
     })
     .then((user) => {
-      if (!user) throw { status: 400, msg: "Invalid email or password" }
+      if (!user) throw { name: "SequelizeValidationError", status: 400, msg: "Invalid email or password" }
       
       const resultCompare = comparePassword(password, user.password)
       
-      if (!resultCompare) throw { status: 400, msg: "Invalid email or password" }
+      if (!resultCompare) throw { name: "SequelizeUniqueConstraintError", status: 400, msg: "Invalid email or password" }
+      console.log('<<<<<<< LOGIN');
       
       const access_token = generateToken({
         id: user.id,
@@ -22,6 +23,7 @@ class Controller {
         city: user.city
       })
       
+      console.log(access_token, "<<<ACCESS TOKEN");
       res.status(200).json({ access_token })
     })
     .catch((err) => {
@@ -53,7 +55,7 @@ class Controller {
       res.status(200).json(jadwal.data)
     })
     .catch(err => {
-      res.status(500).json(err)
+      next(err)
     })
     
   }
@@ -84,6 +86,16 @@ class Controller {
       next(err)
     })
   }
+
+  static getMyUser(req, res, next) {
+    User.findByPk(+req.params.id)
+    .then((data) => {
+      res.status(200).json(data)  
+    })
+    .catch((err) => {
+      next(err)
+    });
+  }
   
   static putSetting(req,res,next){
     const id = +req.params.id
@@ -112,18 +124,21 @@ class Controller {
     })
     .catch(err => {
       console.log(err)
-      //next(err)
+      next(err)
     })
   }
 
   static getWeather(req, res, next){
     let location = req.decoded.city
-    axios.get(`http://api.weatherbit.io/v2.0/current?city=${location}&key=${process.env.WEATHERKEY}`)
+    axios({
+      method: 'GET',
+      url: `http://api.weatherbit.io/v2.0/current?city=${location}&key=${process.env.WEATHERKEY}`
+    })
     .then(weather => {
       res.status(200).json(weather.data)
     })
     .catch(err => {
-      res.status(500).json(err)
+      next(err)
     })
   }
 
